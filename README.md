@@ -1,4 +1,4 @@
-# Cursto Ethereum
+# Curso Ethereum
 Código utilizado en el curso de introducción a Ethereum para desarrolladores
 
 En este apartado final vamos a aplicar todo lo visto anteriormente. Uniremos todas las piezas: red privada de Ethereum, clientes, contratos en Solidity, Truffle, web3.js, etc. para ofrecer una propuesta de valor: gestionar quien puede abrir un cerrojo. 
