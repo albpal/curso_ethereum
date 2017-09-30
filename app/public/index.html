@@ -1,0 +1,131 @@
+<html>
+<head>
+  <title>Mi primera Dapp</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  <script src="js/bundle.js" type="text/javascript"></script>
+</head>
+<body>
+  <center><h1>Aplicación descentralizada</h1></center>
+  <div class="container">
+    <div class="row">
+      <div class="col"><img id="cerrojo" src="images/cerrojo.png"></div>
+      <div class="col">
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Minutos</span>
+          <input type="text" class="form-control" placeholder="Minutos" aria-label="Minutos" aria-describedby="basic-addon1" id="minutos">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Weis</span>
+          <input type="text" class="form-control" placeholder="Importe" aria-label="Importe" aria-describedby="basic-addon1" id="importe">
+        </div>
+        <button type="button" class="btn btn-primary" id="ofertar">Ofertar</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"></div>
+      <div class="col">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-secondary" type="button" id="ver_oferta">Ver oferta</button>
+        </span>
+        <input type="text" class="form-control" placeholder="Dirección Ethereum" aria-label="Dirección Ethereum" id="eth_dir">
+      </div>
+      <table class="table">
+        <thead class="thead-inverse">
+          <tr>
+            <th>@</th>
+            <th>Minutos Estancia</th>
+            <th>Importe Estancia</th>
+            <th>Fecha aceptacion</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" id="ofer_eth_dir"></th>
+            <td id = "ofer_min"></td>
+            <td id = "ofer_eur"></td>
+            <td id = "ofer_fec"></td>
+            <td><button type="button" class="btn btn-success" id="aceptar_oferta">Aceptar</button></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"><button type="button" class="btn btn-info" id="abrir_cerrojo">Abrir cerrojo</button></div>
+      <div class="col"><button type="button" class="btn btn-danger" id="finalizar_contrato">Finalizar Contrato</button></div>
+    </div>
+</div>
+<body>
+  <script>
+    function abrir_cerrojo(Cerrojo)  {
+        document.getElementById("abrir_cerrojo").addEventListener("click", function() {
+          Cerrojo.usufructuario(function(err, res){
+            if (web3.eth.coinbase == res)
+              document.getElementById("cerrojo").src = "images/cerrojo_abierto.png";
+            else
+              document.getElementById("cerrojo").src = "images/cerrojo_cerrado.png";
+          });
+        });
+    }
+
+    function ofertar(Cerrojo){
+      document.getElementById("ofertar").addEventListener("click", function() {
+        if (isNaN(document.getElementById("minutos").value)){
+          alert(" Minutos incorrectos");
+          return;
+        }
+        var minutos = document.getElementById("minutos").value;
+        if (isNaN(document.getElementById("importe").value)){
+          alert("Importe incorrecto");
+          return;
+        }
+        var importe = document.getElementById("importe").value;
+
+        Cerrojo.proponer_oferta(minutos, {value: importe}, function(err, res){
+          if (err != null)
+            alert("Oferta no realizada");
+          // res esta el hash de la transaccion
+          console.log(err);
+        });
+      });
+    }
+    function ver_oferta(Cerrojo)  {
+        document.getElementById("ver_oferta").addEventListener("click", function() {
+          var direccion =   document.getElementById("eth_dir").value;
+          Cerrojo.consultar_oferta(direccion, function(err, res){
+            document.getElementById("ofer_eth_dir").innerHTML = direccion;
+            document.getElementById("ofer_min").innerHTML = res[0].c[0];
+            document.getElementById("ofer_eur").innerHTML = res[1].c[0];
+            document.getElementById("ofer_fec").innerHTML = res[2].c[0];
+          });
+        });
+    }
+    function aceptar_oferta(Cerrojo)  {
+        document.getElementById("aceptar_oferta").addEventListener("click", function() {
+          var eth_dir = document.getElementById("ofer_eth_dir").innerHTML;
+          console.log(eth_dir);
+          Cerrojo.aceptar_oferta(eth_dir, function(err, res){
+            if (err != null)
+            {
+              alert("ERROR ACEPTANDO OFERTA");
+              console.log(err);
+            }
+          });
+        });
+    }
+    function finalizar_contrato(Cerrojo)  {
+        document.getElementById("finalizar_contrato").addEventListener("click", function() {
+          Cerrojo.revisar_fechas(function(err, res){
+            if (err != null)
+            {
+              alert("ERROR FINALIZANDO OFERTA");
+              console.log(err);
+            }
+          });
+        });
+    }
+  </script>
+</html>
