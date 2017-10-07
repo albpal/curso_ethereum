@@ -36,6 +36,7 @@ contract Cerrojo {
 		usufructuario =  nuevo_usufructuario;
 		oferta_aceptada = ofertas[nuevo_usufructuario];
 		oferta_aceptada.fecha_aceptacion = now;
+		delete ofertas[usufructuario];
 	}
 
 	function revisar_fechas()	{

@@ -48,7 +48,7 @@ contract('Cerrojo', function(accounts) {
     });
   });
 
-  it("debe de quitar al usufructuario accounts[1] al pasar el tiempo pagado y volver a asignar a " + owner_account, function() {
+  it("debe de quitar al usufructuario accounts[1] al pasar el tiempo pagado y volver a asignar a accounts[0]", function() {
     var cerrojo;
     return Cerrojo.deployed().then(function(instance) {
       cerrojo =  instance;
